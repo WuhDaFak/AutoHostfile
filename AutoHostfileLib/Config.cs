@@ -13,6 +13,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using AutoHostfile;
 using Microsoft.Win32;
 using System;
 
@@ -33,6 +34,16 @@ namespace AutoHostfileLib
 
         private Config()
         {
+        }
+
+        public string GetShortVersion()
+        {
+            return Common.ShortVersion;
+        }
+
+        public string GetLongVersion()
+        {
+            return Common.LongVersion;
         }
 
         public int GetPort()

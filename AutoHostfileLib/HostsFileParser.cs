@@ -88,6 +88,10 @@ namespace AutoHostfileLib
             {
                 Logger.Debug("Rewriting {0}", HostsFilePath);
 
+                // We always want our own friendly name to be self pingable
+                var ourName = Config.Instance.GetFriendlyHostname();
+                HostnameToAddress[ourName] = new HostEntry(ourName, "127.0.0.1");
+
                 var addresses = new HashSet<string>();
                 foreach(var value in HostnameToAddress.Values)
                 {

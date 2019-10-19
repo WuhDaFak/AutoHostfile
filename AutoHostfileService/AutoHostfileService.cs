@@ -37,7 +37,7 @@ namespace AutoHostfileService
         protected override void OnStop()
         {
             // Ensure auto auto hosts are dead since they may be tailing the log file
-            var autoHosts = Process.GetProcessesByName("autohost");
+            var autoHosts = Process.GetProcessesByName("autohosts");
             foreach(var autoHost in autoHosts)
             {
                 autoHost.Kill();

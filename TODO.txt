@@ -1,8 +1,6 @@
-* Validation should be performed on settings dialog
 * Salt should be added to encryption if possible
 * We should maybe include our own friendly name with 127.0.0.1 into the hosts file
 * We should expire host entries if we haven't seen them for a configurable number of days from the config (-1 for never expire)
 * Add some help for the autohosts tool
 * Add a ping to the autohosts tool
 * Add key generate button to settings
-* Make settings use $(HOSTNAME)

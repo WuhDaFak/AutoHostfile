@@ -13,3 +13,4 @@
 
 * Settings validation
 * Publish tool/configuration added
+* Add own friendly namne to own hosts file

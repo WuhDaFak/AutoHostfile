@@ -13,11 +13,12 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace AutoHostfile
-{
-    public static class Common
-    {
-        public const string LongVersion = "1.0.9.0";
-        public const string ShortVersion = "1.09";
-    }
-}
+using AutoHostfile;
+using System.Reflection;
+
+[assembly: AssemblyCompany("BadgerCorp")]
+[assembly: AssemblyCopyright("Copyright © 2019 Ben Staniford. All rights reserved.")]
+[assembly: AssemblyProduct("Auto Hostfile")]
+
+[assembly: AssemblyVersion(Common.LongVersion)]
+[assembly: AssemblyFileVersion(Common.LongVersion)]

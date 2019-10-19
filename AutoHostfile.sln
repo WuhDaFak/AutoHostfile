@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7051E9E1-F808-45AB-A311-A6FC3E934ADF}"
 	ProjectSection(SolutionItems) = preProject
 		Common.cs = Common.cs
+		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
 		LICENSE = LICENSE
 		PATCH_NOTES.md = PATCH_NOTES.md
 		README.md = README.md

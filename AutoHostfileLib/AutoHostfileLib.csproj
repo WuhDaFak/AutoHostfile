@@ -91,6 +91,7 @@
     <Compile Include="Networking\UdpListener.cs" />
     <Compile Include="Networking\UdpMessageClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\CommonAssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

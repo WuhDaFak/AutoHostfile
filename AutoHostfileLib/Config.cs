@@ -23,6 +23,7 @@ namespace AutoHostfileLib
     {
         // Config is a singleton
         private static readonly Lazy<Config> config = new Lazy<Config>(() => new Config());
+
         public static Config Instance { get { return config.Value; } }
 
         internal const string ServiceName = "AutoHostfileService";
@@ -31,6 +32,7 @@ namespace AutoHostfileLib
         private const int DefaultRepollIntervalSecs = (5 * 60);
         private const string DefaultSharedKey = "(DEFAULT)";
         private const string DefaultFriendlyHostname = "(HOSTNAME)";
+        private const int DefaultLoggingLevel = (int)Logger.LogLevel.Debug;
 
         private Config()
         {
@@ -99,6 +101,22 @@ namespace AutoHostfileLib
 
             return friendlyHostname.Replace(DefaultFriendlyHostname, Utils.GetDefaultFriendlyHostname());
         }
+
+        public Logger.LogLevel GetLoggingLevel()
+        {
+            int loggingLevel = DefaultLoggingLevel;
+
+            using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\" + ServiceName))
+            {
+                if (key != null)
+                {
+                    loggingLevel = (int)key.GetValue("LoggingLevel", DefaultLoggingLevel);
+                }
+            }
+
+            return (Logger.LogLevel)loggingLevel;
+        }
+
 
         public void SetFriendlyHostname(string friendlyName)
         {

@@ -15,14 +15,14 @@
 
 namespace AutoHostfileLib
 {
-    internal class BroadcastNameMessage : MessageBase
+    internal class PingMessage : MessageBase
     {
-        internal const string TypeString = "BROADCAST_NAME";
+        internal const string TypeString = "PING";
 
         internal string Name { get; private set; }
         internal string Address { get; private set;}
 
-        internal BroadcastNameMessage(string name, string address)
+        internal PingMessage(string name, string address)
         {
             this.Name = name;
             this.Address = address;
@@ -35,7 +35,7 @@ namespace AutoHostfileLib
 
         internal override Type GetMessageType()
         {
-            return Type.BroadcastName;
+            return Type.Ping;
         }
     }
 }

@@ -23,13 +23,17 @@ namespace AutoHostfileLib
         {
             var tokens = message.Split(' ');
 
-            if (tokens[0] == BroadcastNameMessage.TypeString)
+            if (tokens[0] == BroadcastMessage.TypeString)
             {
-                return new BroadcastNameMessage(tokens[1], tokens[2]);
+                return new BroadcastMessage(tokens[1], tokens[2]);
             }
-            else if (tokens[0] == BroadcastReplyMessage.TypeString)
+            else if (tokens[0] == PingMessage.TypeString)
             {
-                return new BroadcastReplyMessage(tokens[1], tokens[2]);
+                return new PingMessage(tokens[1], tokens[2]);
+            }
+            else if (tokens[0] == PongMessage.TypeString)
+            {
+                return new PongMessage(tokens[1], tokens[2]);
             }
 
             throw new InvalidOperationException("Unsupported message: " + message);
@@ -37,12 +41,17 @@ namespace AutoHostfileLib
 
         internal static MessageBase BuildBroadcastNameMessage()
         {
-            return new BroadcastNameMessage(Config.Instance.GetFriendlyHostname(), "<LOCALIP>");
+            return new BroadcastMessage(Config.Instance.GetFriendlyHostname(), "<LOCALIP>");
         }
 
-        internal static object BuildBroadcastReplyMessage()
+        internal static MessageBase BuildPingMessage()
         {
-            return new BroadcastReplyMessage(Config.Instance.GetFriendlyHostname(), "<LOCALIP>");
+            return new PingMessage(Config.Instance.GetFriendlyHostname(), "<LOCALIP>");
+        }
+
+        internal static MessageBase BuildPongMessage()
+        {
+            return new PongMessage(Config.Instance.GetFriendlyHostname(), "<LOCALIP>");
         }
     }
 }

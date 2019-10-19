@@ -13,11 +13,29 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace AutoHostfile
+namespace AutoHostfileLib
 {
-    public static class Common
+    internal class BroadcastMessage : MessageBase
     {
-        public const string LongVersion = "1.0.10.0";
-        public const string ShortVersion = "1.10";
+        internal const string TypeString = "BROADCAST";
+
+        internal string Name { get; private set; }
+        internal string Address { get; private set;}
+
+        internal BroadcastMessage(string name, string address)
+        {
+            this.Name = name;
+            this.Address = address;
+        }
+
+        internal override string GetMessageString()
+        {
+            return string.Format("{0} {1} {2}", TypeString, Name, Address);
+        }
+
+        internal override Type GetMessageType()
+        {
+            return Type.Broadcast;
+        }
     }
 }

@@ -28,7 +28,8 @@ https://github.com/benstaniford/AutoHostfile/raw/master/PATCH_NOTES.md
 ## Features
 
 * Lightweight UDP discovery
-* Option to name computers
+* Option to name computers with friendly name
+* Leaves existing host file entries alone
 * End to end, AES traffic encryption
 * Detects power events and the addition of new network interfaces to trigger discovery
 * Simple Settings UI

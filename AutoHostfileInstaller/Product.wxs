@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The name of the product -->
+<?define Name = "Auto Hostfile Service" ?>
+<!-- The manufacturer, for setup package publisher and folder info -->
+<?define Manufacturer = "BadgerCorp" ?>
+<!-- The version number of this setup package-->
+<?define Version = "1.0.8.0" ?>
+<!-- UpgradeCode must be unique and not changed once the first version of the program is installed. -->
+<?define UpgradeCode = "{50EFD457-C450-4EF1-BCD0-FE4B9A4ACCFD}" ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="$(var.Name)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)" Version="$(var.Version)" Language="1033">
+
+    <!-- Create a folder inside Talk Sharp called Test Service -->
+    <Package InstallerVersion="300" Compressed="yes"/>
+    <!-- Create a folder inside Talk Sharp called Test Service -->
+    <Media Id="1" Cabinet="AutoHostfileService.cab" EmbedCab="yes" />
+    <!-- Allow upgrades and prevent downgrades -->
+    <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
+
+    <!-- Include UI Extension (needs references to WixUIExtension.dll and WixUtilExtension.dll) so that we can launch settings on completion -->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch configuration wizard" />
+    <Property Id="WixShellExecTarget" Value="[#AutoHostfileSettings.exe]" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+    <UI>
+      <UIRef Id="WixUI_Minimal" />
+      <Publish Dialog="ExitDialog"
+        Control="Finish"
+        Event="DoAction"
+        Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+    </UI>
+
+    <!-- Define the directory structure -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <!-- Where shortcuts go -->
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="AutoHostfile"/>
+      </Directory>
+
+      <Directory Id="ProgramFilesFolder">
+        <!-- Create a folder inside program files called Manufacturer -->
+        <Directory Id="ROOTDIRECTORY" Name="$(var.Manufacturer)">
+          <!-- Create a folder inside Talk Sharp called Test Service -->
+          <Directory Id="INSTALLFOLDER" Name="$(var.Name)" />
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <!-- The files inside this DirectoryRef are linked to the Test Service directory via INSTALLFOLDER -->
+    <DirectoryRef Id="INSTALLFOLDER">
+
+      <!-- Put our installation directory on the path -->
+      <Component Id="Path" Guid="64FDE27D-1ED7-4FD4-9A4C-1AB1ECE6418B" KeyPath="yes">
+        <Environment Id="PATH" Name="PATH" Value="[INSTALLFOLDER]" Permanent="yes" Part="last" Action="set" System="yes" />
+      </Component>
+
+      <!-- Add default registry entries -->
+      <Component Id="RegistryEntries" Guid="32C71D1C-2375-481C-9758-F7962F442F80">
+        <RegistryKey Root="HKLM"
+                     Key="Software\AutoHostfileService">
+          <RegistryValue Type="integer" Name="Port" Value="9976" KeyPath="yes"/>
+          <RegistryValue Type="integer" Name="RepollIntervalSecs" Value="300"/>
+          <RegistryValue Type="string" Name="FriendlyHostname" Value="(HOSTNAME)"/>
+          <RegistryValue Type="string" Name="SharedKey" Value="(DEFAULT)"/>
+        </RegistryKey>
+      </Component>
+
+      <!-- Create a single component which is the AutoHostfileService.exe file -->
+      <Component Id="$(var.AutoHostfileService.TargetFileName)">
+        <!-- Copies the AutoHostfileService.exe file using the project reference preprocessor variables -->
+        <File Id="$(var.AutoHostfileService.TargetFileName)" Source="$(var.AutoHostfileService.TargetPath)" KeyPath="yes" />
+        <!-- Remove all files from the INSTALLFOLDER on uninstall -->
+        <RemoveFile Id="ALLFILES" Name="*.*" On="both" />
+        <!-- Tell WiX to install the Service -->
+        <ServiceInstall Id="ServiceInstaller"
+        Type="ownProcess"
+        Name="AutoHostfileService"
+        DisplayName="$(var.Name)"
+        Description="Automatically updates the hostfile with discovered hosts"
+        Start="auto"
+        ErrorControl="normal" />
+        <!-- Tell WiX to start the Service -->
+        <ServiceControl Id="StartService" Start="install" Stop="both" Remove="uninstall" Name="AutoHostfileService" Wait="yes" />
+      </Component>
+
+      <Component Id="$(var.AutoHostfileLib.TargetFileName)">
+        <!-- Copies the AutoHostfileLib.dll file using the project reference preprocessor variables -->
+        <File Id="$(var.AutoHostfileLib.TargetFileName)" Source="$(var.AutoHostfileLib.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Id="$(var.AutoHostfileSettings.TargetFileName)">
+        <!-- Copies the AutoHostfileSettings.exe file using the project reference preprocessor variables -->
+        <File Id="$(var.AutoHostfileSettings.TargetFileName)" Source="$(var.AutoHostfileSettings.TargetPath)" KeyPath="yes" />
+      </Component>
+      <Component Id="$(var.autohosts.TargetFileName)">
+        <!-- Copies the AutoHostfileLib.dll file using the project reference preprocessor variables -->
+        <File Id="$(var.autohosts.TargetFileName)" Source="$(var.autohosts.TargetPath)" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <!-- Add a shortcut to our settings program -->
+      <Component Id="SettingsShortcut" Guid="3A601490-187E-418E-8E79-808A56E82F10">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+                  Name="Auto Hostfile Settings"
+                  Description="Auto Hostfile Settings"
+                  Target="[#AutoHostfileSettings.exe]"
+                  WorkingDirectory="INSTALLFOLDER"/>
+        <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\AutoHostfileService" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Tell WiX to install the files -->
+    <Feature Id="MainApplication" Title="Main Application" Level="1">
+      <ComponentRef Id="$(var.AutoHostfileService.TargetFileName)" />
+      <ComponentRef Id="$(var.AutoHostfileLib.TargetFileName)" />
+      <ComponentRef Id="$(var.AutoHostfileSettings.TargetFileName)" />
+      <ComponentRef Id="$(var.autohosts.TargetFileName)" />
+      <ComponentRef Id="RegistryEntries" />
+      <ComponentRef Id="Path" />
+      <ComponentRef Id="SettingsShortcut" />
+    </Feature>
+  </Product>
+</Wix>

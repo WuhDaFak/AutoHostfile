@@ -127,15 +127,15 @@ namespace AutoHostfileLib
         {
             Logger.Debug("Recieved PING from {0}({1})", message.Address, message.Name);
             
-            // Add the reply to our hosts file
-            HostFile.AddMapping(message.Name, message.Address);
-
             try
             {
                 // Send the pong message, we do this as an extra hand shake since sometimes we're told
                 // about a secondary address which only route in one direction
                 var client = new UdpMessageClient(Config.Instance.GetPort());
                 client.Send(message.Address, Messages.BuildPongMessage().ToString());
+
+                // Add the reply to our hosts file
+                HostFile.AddMapping(message.Name, message.Address);
             }
             catch(SocketException ex)
             {

@@ -31,6 +31,7 @@ namespace AutoHostfileService
 
         protected override void OnStart(string[] args)
         {
+            Logger.Instance.SetLoggingLevel(Config.Instance.GetLoggingLevel());
             handler.OnStartup();
         }
 

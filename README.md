@@ -11,11 +11,12 @@ It's useful:
 
 It features:
 
-* Lightweight UDP discovery.
+* Lightweight UDP discovery
 * Option to name computers
 * End to end, AES traffic encryption
 * Detects power events and the addition of new network interfaces to trigger discovery
 * Simple Settings UI
+* MSI Installer
 * Optional expiry of old host records
 
 # Building

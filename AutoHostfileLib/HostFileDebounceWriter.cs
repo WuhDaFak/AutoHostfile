@@ -47,7 +47,7 @@ namespace AutoHostfileLib
                                                      .ToDictionary(pair => pair.Key,
                                                                    pair => pair.Value);
 
-                Logger.Debug("Adding mapping {0} -> {1}", hostname, address);
+                Logger.Info("Adding mapping {0} -> {1}", hostname, address);
                 HostnameToAddress[hostname] = new HostEntry(hostname, address);
 
                 // Write the hosts file once events have gone quiet

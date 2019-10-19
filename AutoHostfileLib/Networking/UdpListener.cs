@@ -39,7 +39,7 @@ namespace AutoHostfileLib
             var from = new IPEndPoint(0, 0);
             Task.Run(() =>
             {
-                Logger.Debug("Listening on port {0}", Port);
+                Logger.Info("Listening on port {0}", Port);
                 using (var client = new UdpClient())
                 {
                     client.Client.Bind(new IPEndPoint(IPAddress.Any, Port));
@@ -52,11 +52,11 @@ namespace AutoHostfileLib
                         }
                         catch(CryptographicException)
                         {
-                            Logger.Debug("Unexpected message recieved, possibly using different shared key");
+                            Logger.Warn("Unexpected message recieved, possibly using different shared key");
                         }
                         catch (Exception ex)
                         {
-                            Logger.Debug("Listener thread, Exception: {0}", ex);
+                            Logger.Error("Listener thread, Exception: {0}", ex);
                         }
                     }
                 }

@@ -19,7 +19,7 @@ namespace AutoHostfileLib
 {
     public abstract class MessageBase
     {
-        internal enum Type { BroadcastName, BroadcastReply };
+        internal enum Type { Broadcast, Ping, Pong };
 
         internal abstract string GetMessageString();
 

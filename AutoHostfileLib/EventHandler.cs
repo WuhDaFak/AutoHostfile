@@ -15,6 +15,7 @@
 
 using System;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Timers;
 
 namespace AutoHostfileLib
@@ -38,7 +39,7 @@ namespace AutoHostfileLib
         public void OnStartup()
         {
             var config = Config.Instance;
-            Logger.Debug("AutoHostfile starting for {0}, version: {1}", config.GetFriendlyHostname(), config.GetShortVersion());
+            Logger.Info("AutoHostfile starting for {0}, version: {1}", config.GetFriendlyHostname(), config.GetShortVersion());
 
             var port = Config.Instance.GetPort();
 
@@ -54,7 +55,7 @@ namespace AutoHostfileLib
 
         internal void OnRepoll(Object source, ElapsedEventArgs e)
         {
-            Logger.Debug("Sending broadcast on port {0}", Config.Instance.GetPort());
+            Logger.Info("Sending broadcast on port {0}", Config.Instance.GetPort());
 
             // Discover new hosts
             UdpBroadcaster broadcaster = new UdpBroadcaster(Config.Instance.GetPort());
@@ -65,7 +66,7 @@ namespace AutoHostfileLib
         {
             bool networkUp = false;
             var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-            Logger.Debug("Network changed event has occured, interface count = {0}", interfaces.Length);
+            Logger.Info("Network changed event has occured, interface count = {0}", interfaces.Length);
             foreach (NetworkInterface nic in interfaces)
             {
                 Logger.Debug("   {0} is {1}", nic.Name, nic.OperationalStatus);
@@ -93,18 +94,21 @@ namespace AutoHostfileLib
 
             switch (message.GetMessageType())
             {
-                case MessageBase.Type.BroadcastName:
-                    OnBroadcastNameRecieved((BroadcastNameMessage)message);
+                case MessageBase.Type.Broadcast:
+                    OnBroadcastRecieved((BroadcastMessage)message);
                     break;
-                case MessageBase.Type.BroadcastReply:
-                    OnBroadcastReplyRecieved((BroadcastReplyMessage)message);
+                case MessageBase.Type.Ping:
+                    OnPingRecieved((PingMessage)message);
+                    break;
+                case MessageBase.Type.Pong:
+                    OnPongRecieved((PongMessage)message);
                     break;
                 default:
                     throw new ArgumentException("Unsupported message: " + messageStr);
             }
         }
 
-        internal void OnBroadcastNameRecieved(BroadcastNameMessage message)
+        internal void OnBroadcastRecieved(BroadcastMessage message)
         {
             if (message.Name == Config.Instance.GetFriendlyHostname())
             {
@@ -112,21 +116,36 @@ namespace AutoHostfileLib
                 return;
             }
 
-            Logger.Debug("Broadcast name recieved from: {0} {1}", message.Name, message.Address);
+            Logger.Debug("Recieved BROADCAST from {0}({1})", message.Address, message.Name);
 
-            // Reply so the broadcaster knows about us
+            // Ping back to the broadcaster, so they know we're alive
             var client = new UdpMessageClient(Config.Instance.GetPort());
-            client.Send(message.Address, Messages.BuildBroadcastReplyMessage().ToString());
-
-            // Add the broadcaster to our own hosts file
-            HostFile.AddMapping(message.Name, message.Address);
+            client.Send(message.Address, Messages.BuildPingMessage().ToString());
         }
 
-        private void OnBroadcastReplyRecieved(BroadcastReplyMessage message)
+        private void OnPingRecieved(PingMessage message)
         {
-            Logger.Debug("Broadcast reply recieved from: {0} {1}", message.Name, message.Address);
+            Logger.Debug("Recieved PING from {0}({1})", message.Address, message.Name);
             
             // Add the reply to our hosts file
+            HostFile.AddMapping(message.Name, message.Address);
+
+            try
+            {
+                // Send the pong message, we do this as an extra hand shake since sometimes we're told
+                // about a secondary address which only route in one direction
+                var client = new UdpMessageClient(Config.Instance.GetPort());
+                client.Send(message.Address, Messages.BuildPongMessage().ToString());
+            }
+            catch(SocketException ex)
+            {
+                Logger.Warn("Address {0} is unroutable", message.Address);
+            }
+        }
+
+        private void OnPongRecieved(PongMessage message)
+        {
+            Logger.Debug("Recieved PONG from {0}({1})", message.Address, message.Name);
             HostFile.AddMapping(message.Name, message.Address);
         }
     }

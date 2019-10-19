@@ -28,12 +28,20 @@ namespace AutoHostfileLib
 
         public static bool LogStdout { get; set; } = false;
 
-        private enum LogLevel
+        private LogLevel currentLogLevel;
+
+        public enum LogLevel
         {
             Error,
             Warn,
+            Info,
             Debug
         };
+
+        public void SetLoggingLevel(LogLevel logLevel)
+        {
+            currentLogLevel = logLevel;
+        }
 
         private Logger()
         {
@@ -61,6 +69,11 @@ namespace AutoHostfileLib
             Logger.Instance.Write(LogLevel.Debug, stringToLog, formatStrings);
         }
 
+        internal static void Info(string stringToLog, params object[] formatStrings)
+        {
+            Logger.Instance.Write(LogLevel.Info, stringToLog, formatStrings);
+        }
+
         public static void Warn(string stringToLog, params object[] formatStrings)
         {
             Logger.Instance.Write(LogLevel.Warn, stringToLog, formatStrings);
@@ -73,6 +86,11 @@ namespace AutoHostfileLib
 
         private void Write(LogLevel level, string stringToLog, params object[] formatStrings)
         {
+            if (currentLogLevel < level)
+            {
+                return;
+            }
+
             lock(this)
             {
                 try

@@ -15,13 +15,14 @@
 
 namespace AutoHostfileLib
 {
-    internal class BroadcastReplyMessage : MessageBase
+    internal class PongMessage : MessageBase
     {
-        internal const string TypeString = "BROADCAST_REPLY";
+        internal const string TypeString = "PONG";
+
         internal string Name { get; private set; }
         internal string Address { get; private set;}
 
-        internal BroadcastReplyMessage(string name, string address)
+        internal PongMessage(string name, string address)
         {
             this.Name = name;
             this.Address = address;
@@ -34,7 +35,7 @@ namespace AutoHostfileLib
 
         internal override Type GetMessageType()
         {
-            return Type.BroadcastReply;
+            return Type.Pong;
         }
     }
 }

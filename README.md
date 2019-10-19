@@ -17,3 +17,9 @@ It features:
 * Detects power events and the addition of new network interfaces to trigger discovery
 * Simple Settings UI
 * Optional expiry of old host records
+
+# Building
+
+* Visual Studio 2019
+* Wix 3.11.2 Toolset
+* Wix 3.11.2 Visual Studio Extension

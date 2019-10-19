@@ -13,7 +13,14 @@ It's useful:
 
 https://github.com/benstaniford/AutoHostfile/raw/master/Releases/AutoHostfile-1.08.msi
 
-# Features:
+# Installation Instructions
+
+1. Install using MSI on each machine you want to manage
+2. Check the settings box after installation to add a friendly name (defaults to hostname) and a shared encryption password.
+3. Check your hosts file to watch it update.
+4. That's it!
+
+# Features
 
 * Lightweight UDP discovery
 * Option to name computers
@@ -28,3 +35,7 @@ https://github.com/benstaniford/AutoHostfile/raw/master/Releases/AutoHostfile-1.
 * Visual Studio 2019
 * Wix 3.11.2 Toolset
 * Wix 3.11.2 Visual Studio Extension
+
+# Logging
+
+* The MSI installs a command line tool which will be added to the path, "autohosts -log" from the command line will allow you to watch the service real time.

@@ -12,3 +12,4 @@
 ## Version 1.09
 
 * Settings validation
+* Publish tool/configuration added

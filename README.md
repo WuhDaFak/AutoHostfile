@@ -39,3 +39,9 @@ https://github.com/benstaniford/AutoHostfile/raw/master/Releases/AutoHostfile-1.
 # Logging
 
 * The MSI installs a command line tool which will be added to the path, "autohosts -log" from the command line will allow you to watch the service real time.
+
+# Donate
+
+* If you find AutoHostfile useful, consider buying me a beer to erm.. support my development efforts ;-)
+
+https://www.paypal.me/AutoHostfile

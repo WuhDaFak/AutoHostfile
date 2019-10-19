@@ -9,7 +9,11 @@ It's useful:
 * If you have DHCP given addresses and your organisation doesn't provide you a sensible way of naming them.
 * If you have machines connected via different network interfaces on different networks and you want a coherent approach to being able to name them.
 
-It features:
+# Latest Release
+
+https://github.com/benstaniford/AutoHostfile/raw/master/Releases/AutoHostfile-1.08.msi
+
+# Features:
 
 * Lightweight UDP discovery
 * Option to name computers

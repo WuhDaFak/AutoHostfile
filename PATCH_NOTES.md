@@ -15,3 +15,4 @@
 * Publish tool/configuration added
 * Add own friendly namne to own hosts file
 * Added metadata to installed binaries
+* Preserve registry settings on upgrade

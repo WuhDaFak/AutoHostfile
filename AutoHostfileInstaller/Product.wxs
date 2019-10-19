@@ -18,6 +18,20 @@
     <!-- Allow upgrades and prevent downgrades -->
     <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
 
+    <!-- Remember our registry settings on upgrade, note the use of # to specify integers -->
+    <Property Id='FRIENDLY_HOSTNAME' Value='(HOSTNAME)'>
+      <RegistrySearch Id='FriendlyHostname' Type='raw' Root='HKLM' Key='Software\AutoHostfileService' Name='FriendlyHostname'/>
+    </Property>
+    <Property Id='PORT' Value='#9976'>
+      <RegistrySearch Id='Port' Type='raw' Root='HKLM' Key='Software\AutoHostfileService' Name='Port'/>
+    </Property>
+    <Property Id='SHARED_KEY' Value='(DEFAULT)'>
+      <RegistrySearch Id='SharedKey' Type='raw' Root='HKLM' Key='Software\AutoHostfileService' Name='SharedKey'/>
+    </Property>
+    <Property Id='REPOLL_INTERVAL' Value='#300'>
+      <RegistrySearch Id='RepollIntervalSecs' Type='raw' Root='HKLM' Key='Software\AutoHostfileService' Name='RepollIntervalSecs'/>
+    </Property>
+
     <!-- Include UI Extension (needs references to WixUIExtension.dll and WixUtilExtension.dll) so that we can launch settings on completion -->
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch configuration wizard" />
     <Property Id="WixShellExecTarget" Value="[#AutoHostfileSettings.exe]" />
@@ -55,14 +69,16 @@
         <Environment Id="PATH" Name="PATH" Value="[INSTALLFOLDER]" Permanent="yes" Part="last" Action="set" System="yes" />
       </Component>
 
-      <!-- Add default registry entries -->
+      <!-- Add default registry entries (or preserve them on upgrade) -->
       <Component Id="RegistryEntries" Guid="32C71D1C-2375-481C-9758-F7962F442F80">
         <RegistryKey Root="HKLM"
                      Key="Software\AutoHostfileService">
-          <RegistryValue Type="integer" Name="Port" Value="9976" KeyPath="yes"/>
-          <RegistryValue Type="integer" Name="RepollIntervalSecs" Value="300"/>
-          <RegistryValue Type="string" Name="FriendlyHostname" Value="(HOSTNAME)"/>
-          <RegistryValue Type="string" Name="SharedKey" Value="(DEFAULT)"/>
+          <RegistryValue Type="string" Name="Port" Value="[PORT]" KeyPath="yes"/>
+          <RegistryValue Type="string" Name="RepollIntervalSecs" Value="[REPOLL_INTERVAL]"/>
+
+          <!-- Theres a strange quirk here, these are integers, but because the property above sets #, they're written as ints -->
+          <RegistryValue Type="string" Name="FriendlyHostname" Value="[FRIENDLY_HOSTNAME]"/>
+          <RegistryValue Type="string" Name="SharedKey" Value="[SHARED_KEY]"/>
         </RegistryKey>
       </Component>
 

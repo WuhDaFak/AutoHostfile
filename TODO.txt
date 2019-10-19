@@ -1,3 +1,17 @@
 * Salt should be added to encryption if possible
 * We should expire host entries if we haven't seen them for a configurable number of days from the config (-1 for never expire)
 * Add a ping to the autohosts tool
+
+
+* Bug:
+
+19-10-2019:17:44:05.881 Debug: Broadcast name recieved from: WIN7 192.168.218.128
+19-10-2019:17:44:06.004 Debug: Replied to 192.168.218.128 with BROADCAST_REPLY LAPTOP 10.0.80.97
+19-10-2019:17:44:06.004 Debug: Broadcast name recieved from: WIN7 169.254.152.222
+19-10-2019:17:44:06.126 Debug: Listener thread, Exception: System.Net.Sockets.SocketException (0x80004005): A socket operation was attempted to an unreachable network
+   at System.Net.Sockets.Socket.SendTo(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags, EndPoint remoteEP)
+   at System.Net.Sockets.UdpClient.Send(Byte[] dgram, Int32 bytes, IPEndPoint endPoint)
+   at AutoHostfileLib.UdpMessageClient.Send(String address, String str)
+   at AutoHostfileLib.EventHandler.OnBroadcastNameRecieved(BroadcastNameMessage message)
+   at AutoHostfileLib.EventHandler.OnMessageRecieved(String messageStr)
+   at AutoHostfileLib.UdpListener.<>c__DisplayClass3_0.<StartListening>b__0()

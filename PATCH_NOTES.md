@@ -18,3 +18,8 @@
 * Preserve registry settings on upgrade
 * Added help to autohosts command
 * Added generate button to create a random shared key
+
+## Version 1.10
+
+* Fixed issue where machines with multiple nics could give back unroutable addresses which would be stored
+* Simplified protocol

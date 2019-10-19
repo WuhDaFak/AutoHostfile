@@ -32,7 +32,8 @@ namespace AutoHostfileLib
         {
             Error,
             Warn,
-            Debug
+            Debug,
+            Info
         };
 
         private Logger()
@@ -59,6 +60,11 @@ namespace AutoHostfileLib
         public static void Debug(string stringToLog, params object[] formatStrings)
         {
             Logger.Instance.Write(LogLevel.Debug, stringToLog, formatStrings);
+        }
+
+        internal static void Info(string stringToLog, params object[] formatStrings)
+        {
+            Logger.Instance.Write(LogLevel.Info, stringToLog, formatStrings);
         }
 
         public static void Warn(string stringToLog, params object[] formatStrings)

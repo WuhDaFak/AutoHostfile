@@ -4,7 +4,7 @@
 <!-- The manufacturer, for setup package publisher and folder info -->
 <?define Manufacturer = "BadgerCorp" ?>
 <!-- The version number of this setup package-->
-<?define Version = "1.0.9.0" ?>
+<?define Version = "1.0.10.0" ?>
 <!-- UpgradeCode must be unique and not changed once the first version of the program is installed. -->
 <?define UpgradeCode = "{50EFD457-C450-4EF1-BCD0-FE4B9A4ACCFD}" ?>
 

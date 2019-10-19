@@ -86,7 +86,7 @@ namespace AutoHostfileLib
             var oldEntries = ScrubFile();
             if (HostnameToAddress.Count > 0 || oldEntries.Count > 0)
             {
-                Logger.Debug("Rewriting {0}", HostsFilePath);
+                Logger.Info("Rewriting {0}", HostsFilePath);
 
                 // We always want our own friendly name to be self pingable
                 var ourName = Config.Instance.GetFriendlyHostname();

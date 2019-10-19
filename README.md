@@ -1,5 +1,5 @@
 # AutoHostfile
-Automatic, lightweight UDP name discovery with automatic host file update service
+An automatic, lightweight UDP name discovery service which updates the MS Windows hosts file
 
 AutoHostfile is a lightweight service, which can be installed on MS Windows computers. It requires almost no configuration and allows groups of computers to discover each other, updating their DNS host files automatically.
 

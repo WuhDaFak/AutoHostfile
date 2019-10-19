@@ -1,4 +1,3 @@
 * Salt should be added to encryption if possible
 * We should expire host entries if we haven't seen them for a configurable number of days from the config (-1 for never expire)
 * Add a ping to the autohosts tool
-* Add key generate button to settings

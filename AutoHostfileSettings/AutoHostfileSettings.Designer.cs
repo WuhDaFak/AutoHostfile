@@ -60,6 +60,7 @@ namespace AutoHostfileSettings
             this.linkLblUpdates = new System.Windows.Forms.LinkLabel();
             this.lblVersion = new System.Windows.Forms.Label();
             this.validationErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.btnGenerate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.validationErrorProvider)).BeginInit();
             this.SuspendLayout();
@@ -146,7 +147,7 @@ namespace AutoHostfileSettings
             // 
             this.txtSharedKey.Location = new System.Drawing.Point(324, 115);
             this.txtSharedKey.Name = "txtSharedKey";
-            this.txtSharedKey.Size = new System.Drawing.Size(239, 20);
+            this.txtSharedKey.Size = new System.Drawing.Size(154, 20);
             this.txtSharedKey.TabIndex = 3;
             this.txtSharedKey.TextChanged += new System.EventHandler(this.allFields_TextChanged);
             this.txtSharedKey.Validating += new System.ComponentModel.CancelEventHandler(this.txtSharedKey_Validating);
@@ -203,6 +204,16 @@ namespace AutoHostfileSettings
             // 
             this.validationErrorProvider.ContainerControl = this;
             // 
+            // btnGenerate
+            // 
+            this.btnGenerate.Location = new System.Drawing.Point(482, 114);
+            this.btnGenerate.Name = "btnGenerate";
+            this.btnGenerate.Size = new System.Drawing.Size(81, 22);
+            this.btnGenerate.TabIndex = 8;
+            this.btnGenerate.Text = "Generate";
+            this.btnGenerate.UseVisualStyleBackColor = true;
+            this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
+            // 
             // AutoHostfileSettingsForm
             // 
             this.AcceptButton = this.btnSave;
@@ -210,6 +221,7 @@ namespace AutoHostfileSettings
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(591, 303);
+            this.Controls.Add(this.btnGenerate);
             this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.linkLblUpdates);
             this.Controls.Add(this.linkLblSupport);
@@ -257,6 +269,7 @@ namespace AutoHostfileSettings
         private System.Windows.Forms.LinkLabel linkLblUpdates;
         private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.ErrorProvider validationErrorProvider;
+        private System.Windows.Forms.Button btnGenerate;
     }
 }
 

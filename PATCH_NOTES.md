@@ -17,3 +17,4 @@
 * Added metadata to installed binaries
 * Preserve registry settings on upgrade
 * Added help to autohosts command
+* Added generate button to create a random shared key

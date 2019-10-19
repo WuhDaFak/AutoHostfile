@@ -15,6 +15,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
@@ -26,6 +27,8 @@ namespace AutoHostfileSettings
     public partial class AutoHostfileSettingsForm : Form
     {
         private Regex rgxValidHost = new Regex(@"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$");
+
+        private static Random random = new Random();
 
         private string originalFriendlyName = Config.Instance.GetFriendlyHostname();
         private int originalPort = Config.Instance.GetPort();
@@ -136,5 +139,18 @@ namespace AutoHostfileSettings
         {
             btnSave.Enabled = txtFriendlyNameValid() && txtPortValid() && txtSharedKeyValid();
         }
+
+        private void btnGenerate_Click(object sender, EventArgs e)
+        {
+            txtSharedKey.Text = RandomString(12);
+        }
+
+        public static string RandomString(int length)
+        {
+            const string chars = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!""£$%^&()";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
     }
 }

@@ -24,7 +24,7 @@ namespace autohost
 {
     class Program
     {
-        enum Command { ListHosts, TailLog };
+        enum Command { ListHosts, TailLog, ShowHelp };
 
         static Command ProcessArgs(string[] args)
         {
@@ -33,6 +33,10 @@ namespace autohost
                 if (args[i] == "-log")
                 {
                     return Command.TailLog;
+                }
+                else if (args[i] == "-h" || args[i] == "/?")
+                {
+                    return Command.ShowHelp;
                 }
             }
 
@@ -51,9 +55,19 @@ namespace autohost
                     TailLog();
                     break;
 
+                case Command.ShowHelp:
+                    ShowHelp();
+                    break;
+
                 default:
                     break;
             }
+        }
+
+        private static void ShowHelp()
+        {
+            Console.WriteLine("autohosts        * Prints out known hosts");
+            Console.WriteLine("autohosts -log   * Gives live view of the log file");
         }
 
         /// <summary>

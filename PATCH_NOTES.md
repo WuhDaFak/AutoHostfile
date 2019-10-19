@@ -16,3 +16,4 @@
 * Add own friendly namne to own hosts file
 * Added metadata to installed binaries
 * Preserve registry settings on upgrade
+* Added help to autohosts command

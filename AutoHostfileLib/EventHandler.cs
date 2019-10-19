@@ -37,6 +37,9 @@ namespace AutoHostfileLib
 
         public void OnStartup()
         {
+            var config = Config.Instance;
+            Logger.Debug("AutoHostfile starting for {0}, version: {1}", config.GetFriendlyHostname(), config.GetShortVersion());
+
             var port = Config.Instance.GetPort();
 
             // Add inbound rules to the filewall

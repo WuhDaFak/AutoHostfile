@@ -72,6 +72,7 @@ namespace AutoHostfileSettings
         {
             var config = Config.Instance;
 
+            lblVersion.Text = "Version: " + config.GetShortVersion();
             txtFriendlyName.Text = config.GetFriendlyHostname();
             txtPort.Text = config.GetPort().ToString();
             txtSharedKey.Text = config.GetSharedKey();

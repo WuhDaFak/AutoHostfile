@@ -57,6 +57,7 @@ namespace AutoHostfileSettings
             this.lblHelp = new System.Windows.Forms.Label();
             this.linkLblSupport = new System.Windows.Forms.LinkLabel();
             this.linkLblUpdates = new System.Windows.Forms.LinkLabel();
+            this.lblVersion = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -161,7 +162,7 @@ namespace AutoHostfileSettings
             // linkLblSupport
             // 
             this.linkLblSupport.AutoSize = true;
-            this.linkLblSupport.Location = new System.Drawing.Point(521, 252);
+            this.linkLblSupport.Location = new System.Drawing.Point(521, 266);
             this.linkLblSupport.Name = "linkLblSupport";
             this.linkLblSupport.Size = new System.Drawing.Size(42, 13);
             this.linkLblSupport.TabIndex = 6;
@@ -172,13 +173,22 @@ namespace AutoHostfileSettings
             // linkLblUpdates
             // 
             this.linkLblUpdates.AutoSize = true;
-            this.linkLblUpdates.Location = new System.Drawing.Point(468, 252);
+            this.linkLblUpdates.Location = new System.Drawing.Point(468, 266);
             this.linkLblUpdates.Name = "linkLblUpdates";
             this.linkLblUpdates.Size = new System.Drawing.Size(47, 13);
             this.linkLblUpdates.TabIndex = 6;
             this.linkLblUpdates.TabStop = true;
             this.linkLblUpdates.Text = "Updates";
             this.linkLblUpdates.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLblUpdates_LinkClicked);
+            // 
+            // lblVersion
+            // 
+            this.lblVersion.Location = new System.Drawing.Point(463, 237);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(100, 23);
+            this.lblVersion.TabIndex = 7;
+            this.lblVersion.Text = "Version:";
+            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // AutoHostfileSettingsForm
             // 
@@ -187,6 +197,7 @@ namespace AutoHostfileSettings
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(591, 303);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.linkLblUpdates);
             this.Controls.Add(this.linkLblSupport);
             this.Controls.Add(this.lblHelp);
@@ -230,6 +241,7 @@ namespace AutoHostfileSettings
         private System.Windows.Forms.Label lblHelp;
         private System.Windows.Forms.LinkLabel linkLblSupport;
         private System.Windows.Forms.LinkLabel linkLblUpdates;
+        private System.Windows.Forms.Label lblVersion;
     }
 }
 

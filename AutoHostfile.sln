@@ -17,6 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoHostfileSettings", "Aut
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7051E9E1-F808-45AB-A311-A6FC3E934ADF}"
 	ProjectSection(SolutionItems) = preProject
+		Common.cs = Common.cs
+		LICENSE = LICENSE
+		README.md = README.md
 		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject

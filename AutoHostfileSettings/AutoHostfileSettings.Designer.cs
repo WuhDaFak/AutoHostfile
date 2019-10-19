@@ -56,6 +56,7 @@ namespace AutoHostfileSettings
             this.lblSharedKey = new System.Windows.Forms.Label();
             this.lblHelp = new System.Windows.Forms.Label();
             this.linkLblSupport = new System.Windows.Forms.LinkLabel();
+            this.linkLblUpdates = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -160,13 +161,24 @@ namespace AutoHostfileSettings
             // linkLblSupport
             // 
             this.linkLblSupport.AutoSize = true;
-            this.linkLblSupport.Location = new System.Drawing.Point(416, 252);
+            this.linkLblSupport.Location = new System.Drawing.Point(521, 252);
             this.linkLblSupport.Name = "linkLblSupport";
-            this.linkLblSupport.Size = new System.Drawing.Size(110, 13);
+            this.linkLblSupport.Size = new System.Drawing.Size(42, 13);
             this.linkLblSupport.TabIndex = 6;
             this.linkLblSupport.TabStop = true;
-            this.linkLblSupport.Text = "Support Auto Hostfile!";
+            this.linkLblSupport.Text = "Donate";
             this.linkLblSupport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLblSupport_LinkClicked);
+            // 
+            // linkLblUpdates
+            // 
+            this.linkLblUpdates.AutoSize = true;
+            this.linkLblUpdates.Location = new System.Drawing.Point(468, 252);
+            this.linkLblUpdates.Name = "linkLblUpdates";
+            this.linkLblUpdates.Size = new System.Drawing.Size(47, 13);
+            this.linkLblUpdates.TabIndex = 6;
+            this.linkLblUpdates.TabStop = true;
+            this.linkLblUpdates.Text = "Updates";
+            this.linkLblUpdates.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLblUpdates_LinkClicked);
             // 
             // AutoHostfileSettingsForm
             // 
@@ -175,6 +187,7 @@ namespace AutoHostfileSettings
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(591, 303);
+            this.Controls.Add(this.linkLblUpdates);
             this.Controls.Add(this.linkLblSupport);
             this.Controls.Add(this.lblHelp);
             this.Controls.Add(this.lblSharedKey);
@@ -216,6 +229,7 @@ namespace AutoHostfileSettings
         private System.Windows.Forms.Label lblSharedKey;
         private System.Windows.Forms.Label lblHelp;
         private System.Windows.Forms.LinkLabel linkLblSupport;
+        private System.Windows.Forms.LinkLabel linkLblUpdates;
     }
 }
 

@@ -86,5 +86,10 @@ namespace AutoHostfileSettings
         {
             Process.Start("http://paypal.me/AutoHostfile");
         }
+
+        private void linkLblUpdates_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/benstaniford/AutoHostfile");
+        }
     }
 }

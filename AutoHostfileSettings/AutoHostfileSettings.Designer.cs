@@ -43,6 +43,7 @@ namespace AutoHostfileSettings
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AutoHostfileSettingsForm));
             this.btnSave = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -58,7 +59,9 @@ namespace AutoHostfileSettings
             this.linkLblSupport = new System.Windows.Forms.LinkLabel();
             this.linkLblUpdates = new System.Windows.Forms.LinkLabel();
             this.lblVersion = new System.Windows.Forms.Label();
+            this.validationErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.validationErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSave
@@ -109,6 +112,8 @@ namespace AutoHostfileSettings
             this.txtFriendlyName.Name = "txtFriendlyName";
             this.txtFriendlyName.Size = new System.Drawing.Size(239, 20);
             this.txtFriendlyName.TabIndex = 3;
+            this.txtFriendlyName.TextChanged += new System.EventHandler(this.allFields_TextChanged);
+            this.txtFriendlyName.Validating += new System.ComponentModel.CancelEventHandler(this.txtFriendlyName_Validating);
             // 
             // lblFriendlyName
             // 
@@ -125,6 +130,8 @@ namespace AutoHostfileSettings
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(239, 20);
             this.txtPort.TabIndex = 3;
+            this.txtPort.TextChanged += new System.EventHandler(this.allFields_TextChanged);
+            this.txtPort.Validating += new System.ComponentModel.CancelEventHandler(this.txtPort_Validating);
             // 
             // lblPort
             // 
@@ -141,6 +148,8 @@ namespace AutoHostfileSettings
             this.txtSharedKey.Name = "txtSharedKey";
             this.txtSharedKey.Size = new System.Drawing.Size(239, 20);
             this.txtSharedKey.TabIndex = 3;
+            this.txtSharedKey.TextChanged += new System.EventHandler(this.allFields_TextChanged);
+            this.txtSharedKey.Validating += new System.ComponentModel.CancelEventHandler(this.txtSharedKey_Validating);
             // 
             // lblSharedKey
             // 
@@ -190,6 +199,10 @@ namespace AutoHostfileSettings
             this.lblVersion.Text = "Version:";
             this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // validationErrorProvider
+            // 
+            this.validationErrorProvider.ContainerControl = this;
+            // 
             // AutoHostfileSettingsForm
             // 
             this.AcceptButton = this.btnSave;
@@ -221,6 +234,7 @@ namespace AutoHostfileSettings
             this.TopMost = true;
             this.Load += new System.EventHandler(this.AutoHostfileSettingsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.validationErrorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -242,6 +256,7 @@ namespace AutoHostfileSettings
         private System.Windows.Forms.LinkLabel linkLblSupport;
         private System.Windows.Forms.LinkLabel linkLblUpdates;
         private System.Windows.Forms.Label lblVersion;
+        private System.Windows.Forms.ErrorProvider validationErrorProvider;
     }
 }
 

@@ -15,7 +15,9 @@
 
 using System;
 using System.Diagnostics;
+using System.Net;
 using System.ServiceProcess;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using AutoHostfileLib;
 
@@ -23,6 +25,12 @@ namespace AutoHostfileSettings
 {
     public partial class AutoHostfileSettingsForm : Form
     {
+        private Regex rgxValidHost = new Regex(@"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$");
+
+        private string originalFriendlyName = Config.Instance.GetFriendlyHostname();
+        private int originalPort = Config.Instance.GetPort();
+        private string originalSharedKey = Config.Instance.GetSharedKey();
+
         public AutoHostfileSettingsForm()
         {
             InitializeComponent();
@@ -91,6 +99,42 @@ namespace AutoHostfileSettings
         private void linkLblUpdates_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/benstaniford/AutoHostfile");
+        }
+
+        private bool txtFriendlyNameValid()
+        {
+            return txtFriendlyName.Text.Length > 0 && rgxValidHost.IsMatch(txtFriendlyName.Text);
+        }
+
+        private void txtFriendlyName_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            validationErrorProvider.SetError(txtFriendlyName, txtFriendlyNameValid() ? "" : "Not a valid hostname");
+        }
+
+        private bool txtPortValid()
+        {
+            int port;
+            return int.TryParse(txtPort.Text, out port) && port < IPEndPoint.MaxPort;
+        }
+
+        private void txtPort_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            validationErrorProvider.SetError(txtPort, txtPortValid() ? "" : "Not a valid port");
+        }
+
+        private bool txtSharedKeyValid()
+        {
+            return txtSharedKey.Text.Length >= 8;
+        }
+
+        private void txtSharedKey_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            validationErrorProvider.SetError(txtSharedKey, txtSharedKeyValid() ? "" : "Shared key must be at least 8 characters");
+        }
+
+        private void allFields_TextChanged(object sender, EventArgs e)
+        {
+            btnSave.Enabled = txtFriendlyNameValid() && txtPortValid() && txtSharedKeyValid();
         }
     }
 }

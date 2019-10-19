@@ -21,5 +21,6 @@
 
 ## Version 1.10
 
-* Fixed issue where machines with multiple nics could give back unroutable addresses which would be stored
+* Fixed bug where machines with multiple nics could give back unroutable addresses which would incorrectly stored in hosts file
 * Simplified protocol
+* Added logging levels

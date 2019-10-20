@@ -49,8 +49,10 @@ namespace AutoHostfileLib
         /// </summary>
         /// <param name="oldEntries">Any host entries previously added by us</param>
         /// <param name="originalLines">The original lines of the file as if we never edited it</param>
-        public void Parse(List<HostEntry> oldEntries, List<string> originalLines)
+        public bool Parse(List<HostEntry> oldEntries, List<string> originalLines)
         {
+            bool foundOurContent = false;
+
             var blankLines = new List<string>();
             using (var reader = new StreamReader(_hostsFilePath))
             {
@@ -64,7 +66,7 @@ namespace AutoHostfileLib
                     }
                     else if (Regex.Match(line, @"^\s*\#.*$", RegexOptions.None).Success || line.IndexOf(_commentToken) == -1)
                     {
-                        // Keep any blank lines that the user added
+                        // Keep any blank lines that the user added, but we'll leave any blank lines that we added
                         originalLines.AddRange(blankLines);
                         blankLines.Clear();
 
@@ -74,11 +76,35 @@ namespace AutoHostfileLib
                     else
                     {
                         // It's one of our lines
+                        foundOurContent = true;
+
                         var tokens = line.Split();
-                        oldEntries.Add(new HostEntry(tokens[1], tokens[0]));
+                        DateTime timeStamp;
+
+                        // Find the timestamp, it's made of two tokens
+                        string prevToken = "";
+                        foreach (var token in tokens)
+                        {
+                            if (prevToken.Length != 0 && 
+                                DateTime.TryParse(prevToken + " " + token, out timeStamp))
+                            {
+                                if ((DateTime.Now - timeStamp).TotalDays < Config.Instance.GetOldHostRetentionDays())
+                                {
+                                    oldEntries.Add(new HostEntry(tokens[1], tokens[0], timeStamp));
+                                }
+                                else
+                                {
+                                    Logger.Debug("Descarding old hosts entry for {0} since it's older than {1} days", tokens[1], Config.Instance.GetOldHostRetentionDays());
+                                }
+                                break;
+                            }
+                            prevToken = token;
+                        }
                     }
                 }
             }
+
+            return foundOurContent;
         }
 
         internal void Rewrite()
@@ -116,7 +142,7 @@ namespace AutoHostfileLib
 
                         foreach (var originalLine in _hostnameToAddress.Values)
                         {
-                            writer.WriteLine("{0} {1} {2,25} {3}", originalLine.Address, originalLine.HostName, _commentFormat, DateTime.Now);
+                            writer.WriteLine("{0,-15} {1,-20} {2,-25} {3}", originalLine.Address, originalLine.HostName, _commentFormat, originalLine.Timestamp);
                         }
                     }
                 }
@@ -145,9 +171,9 @@ namespace AutoHostfileLib
 
                 // Parse the file
                 var originalLines = new List<string>();
-                Parse(oldEntries, originalLines);
 
-                if (oldEntries.Count > 0)
+                // If our content was found in the file, we'll need to rewrite it back to the original file
+                if (Parse(oldEntries, originalLines))
                 {
                     // Rewrite the file without our entries
                     using (var writer = new StreamWriter(_hostsFilePath, false))

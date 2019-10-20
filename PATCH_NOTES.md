@@ -24,3 +24,8 @@
 * Fixed bug where machines with multiple nics could give back unroutable addresses which would incorrectly stored in hosts file
 * Simplified protocol
 * Added logging levels
+
+## Version 1.11
+
+* Added old host expiry after a default of 30 days, configurable via the registry
+* Format host entries more nicely

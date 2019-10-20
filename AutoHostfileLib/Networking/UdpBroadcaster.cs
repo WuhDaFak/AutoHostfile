@@ -27,19 +27,19 @@ namespace AutoHostfileLib
     /// </summary>
     internal class UdpBroadcaster
     {
-        private List<MultiInterfaceUdpClient> UdpClients = new List<MultiInterfaceUdpClient>();
-        private Dictionary<MultiInterfaceUdpClient, string> ClientToAddress = new Dictionary<MultiInterfaceUdpClient, string>();
-        private int Port;
+        private List<MultiInterfaceUdpClient> _udpClients = new List<MultiInterfaceUdpClient>();
+        private Dictionary<MultiInterfaceUdpClient, string> _clientToAddress = new Dictionary<MultiInterfaceUdpClient, string>();
+        private int _port;
 
         internal UdpBroadcaster(int port)
         {
-            this.Port = port;
+            this._port = port;
             Populate();
         }
 
         private void Populate()
         {
-            UdpClients.Clear();
+            _udpClients.Clear();
 
             foreach (var adapter in NetworkInterface.GetAllNetworkInterfaces())
             {
@@ -55,8 +55,8 @@ namespace AutoHostfileLib
 
                         var client = new MultiInterfaceUdpClient();
                         client.Client.Bind(new IPEndPoint(address.Address, 0));
-                        ClientToAddress.Add(client, address.Address.ToString());
-                        UdpClients.Add(client);
+                        _clientToAddress.Add(client, address.Address.ToString());
+                        _udpClients.Add(client);
                     }
                     catch(SocketException)
                     {
@@ -68,11 +68,11 @@ namespace AutoHostfileLib
 
         internal void Send(string str)
         {
-            var endpoint = new IPEndPoint(IPAddress.Broadcast, Port);
+            var endpoint = new IPEndPoint(IPAddress.Broadcast, _port);
 
-            foreach(var client in UdpClients)
+            foreach(var client in _udpClients)
             {
-                string toSend = str.Replace("<LOCALIP>", ClientToAddress[client]);
+                string toSend = str.Replace("<LOCALIP>", _clientToAddress[client]);
 
                 var data = TrafficEncryptor.Instance.Encrypt(toSend);
                 client.Send(data, data.Length, endpoint);

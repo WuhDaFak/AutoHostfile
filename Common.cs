@@ -17,7 +17,7 @@ namespace AutoHostfile
 {
     public static class Common
     {
-        public const string LongVersion = "1.0.10.0";
-        public const string ShortVersion = "1.10";
+        public const string LongVersion = "1.0.11.0";
+        public const string ShortVersion = "1.11";
     }
 }

@@ -23,11 +23,11 @@ namespace AutoHostfileLib
 {
     public class UdpMessageClient
     {
-        private int Port;
+        private int _port;
 
         public UdpMessageClient(int port)
         {
-            this.Port = port;
+            _port = port;
         }
 
         private IPAddress GetLocalIP(IPAddress destIp)
@@ -76,7 +76,7 @@ namespace AutoHostfileLib
         {
             var destIp = IPAddress.Parse(address);
             var localIp = GetLocalIP(destIp);
-            var destination = new IPEndPoint(destIp, Port);
+            var destination = new IPEndPoint(destIp, _port);
 
             string toSend = str.Replace("<LOCALIP>", localIp.ToString());
             var data = TrafficEncryptor.Instance.Encrypt(toSend);

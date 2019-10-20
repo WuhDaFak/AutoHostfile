@@ -28,10 +28,9 @@ namespace AutoHostfileLib
         /// </summary>
         public event DebounceFiredEventHandler DebounceFiredEvent;
 
-        private Stopwatch debounceElapsedTime = new Stopwatch();
-        private Task UpdateTask = null;
-
-        private int DebouncePeriod;
+        private Stopwatch _debounceElapsedTime = new Stopwatch();
+        private Task _updateTask = null;
+        private int _debouncePeriod;
 
         /// <summary>
         /// Creates the debouncer and sets the period which the debouncer will wait before triggering
@@ -39,7 +38,7 @@ namespace AutoHostfileLib
         /// <param name="debouncePeriod">How long events must have ceased, before the DebounceFireEvent handler is called</param>
         public Debouncer(int debouncePeriod)
         {
-            DebouncePeriod = debouncePeriod;
+            _debouncePeriod = debouncePeriod;
         }
 
         /// <summary>
@@ -49,25 +48,25 @@ namespace AutoHostfileLib
         {
             lock (this)
             {
-                debounceElapsedTime.Reset();
-                debounceElapsedTime.Start();
+                _debounceElapsedTime.Reset();
+                _debounceElapsedTime.Start();
 
-                if (UpdateTask == null)
+                if (_updateTask == null)
                 {
-                    UpdateTask = Task.Run(() =>
+                    _updateTask = Task.Run(() =>
                     {
-                        var elapsed = debounceElapsedTime.ElapsedMilliseconds;
-                        while (elapsed < DebouncePeriod)
+                        var elapsed = _debounceElapsedTime.ElapsedMilliseconds;
+                        while (elapsed < _debouncePeriod)
                         {
-                            Thread.Sleep((int)(DebouncePeriod - elapsed));
-                            elapsed = debounceElapsedTime.ElapsedMilliseconds;
+                            Thread.Sleep((int)(_debouncePeriod - elapsed));
+                            elapsed = _debounceElapsedTime.ElapsedMilliseconds;
                         }
 
                         DebounceFiredEvent.Invoke();
 
                         lock (this)
                         {
-                            UpdateTask = null;
+                            _updateTask = null;
                         }
                     });
                 }

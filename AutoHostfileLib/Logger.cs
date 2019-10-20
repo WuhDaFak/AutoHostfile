@@ -20,15 +20,13 @@ namespace AutoHostfileLib
 {
     public sealed class Logger
     {
-        private static readonly Lazy<Logger> logger = new Lazy<Logger>(() => new Logger());
+        private static readonly Lazy<Logger> _logger = new Lazy<Logger>(() => new Logger());
 
-        public static Logger Instance { get { return logger.Value; } }
-
-        private string LogFile;
-
+        public static Logger Instance { get { return _logger.Value; } }
         public static bool LogStdout { get; set; } = false;
 
-        private LogLevel currentLogLevel;
+        private string _logFile;
+        private LogLevel _currentLogLevel;
 
         public enum LogLevel
         {
@@ -40,7 +38,7 @@ namespace AutoHostfileLib
 
         public void SetLoggingLevel(LogLevel logLevel)
         {
-            currentLogLevel = logLevel;
+            _currentLogLevel = logLevel;
         }
 
         private Logger()
@@ -48,13 +46,13 @@ namespace AutoHostfileLib
             if (!LogStdout)
             {
                 var logPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\AutoHostfile";
-                LogFile = logPath + @"\AutoHostfile.txt";
+                _logFile = logPath + @"\AutoHostfile.txt";
                 try
                 {
                     Directory.CreateDirectory(logPath);
-                    if (File.Exists(LogFile))
+                    if (File.Exists(_logFile))
                     {
-                        File.Delete(LogFile);
+                        File.Delete(_logFile);
                     }
                 }
                 catch(IOException)
@@ -86,7 +84,7 @@ namespace AutoHostfileLib
 
         private void Write(LogLevel level, string stringToLog, params object[] formatStrings)
         {
-            if (currentLogLevel < level)
+            if (_currentLogLevel < level)
             {
                 return;
             }
@@ -101,7 +99,7 @@ namespace AutoHostfileLib
                     }
                     else
                     {
-                        using (var writer = new StreamWriter(LogFile, true))
+                        using (var writer = new StreamWriter(_logFile, true))
                         {
                             writer.WriteLine(DateTime.Now.ToString("dd-MM-yyyy:HH:mm:ss.fff") + " " + level.ToString("G") + ": " + stringToLog, formatStrings);
                         }

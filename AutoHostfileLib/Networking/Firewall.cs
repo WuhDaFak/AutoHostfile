@@ -18,13 +18,9 @@ using NetFwTypeLib;
 
 namespace AutoHostfileLib
 {
-    internal class Firewall
+    internal static class Firewall
     {
-        internal Firewall()
-        {
-        }
-
-        internal void Configure(int port)
+        internal static void Configure(int port)
         {
             INetFwMgr icfMgr = null;
             try

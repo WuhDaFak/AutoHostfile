@@ -22,18 +22,19 @@ namespace AutoHostfileLib
 {
     public class EventHandler
     {
-        HostFileDebounceWriter HostFile = new HostFileDebounceWriter();
-        private NetworkEventSink NetEventSink = new NetworkEventSink();
-        private Timer RepollTimer;
+        private HostFileDebounceWriter _hostFile = new HostFileDebounceWriter();
+        private NetworkEventSink _netEventSink = new NetworkEventSink();
+        private Timer _repollTimer;
+        private UdpListener _listener;
 
         public EventHandler()
         {
-            RepollTimer = new Timer(Config.Instance.GetRepollIntervalSecs() * 1000);
-            RepollTimer.Elapsed += OnRepoll;
-            RepollTimer.AutoReset = true;
-            RepollTimer.Enabled = true;
+            _repollTimer = new Timer(Config.Instance.GetRepollIntervalSecs() * 1000);
+            _repollTimer.Elapsed += OnRepoll;
+            _repollTimer.AutoReset = true;
+            _repollTimer.Enabled = true;
 
-            NetEventSink.NetworkSinkDebounceEvent += OnNetworkChanged;
+            _netEventSink.NetworkSinkDebounceEvent += OnNetworkChanged;
         }
 
         public void OnStartup()
@@ -44,18 +45,17 @@ namespace AutoHostfileLib
             var port = Config.Instance.GetPort();
 
             // Add inbound rules to the filewall
-            Firewall firewall = new Firewall();
-            firewall.Configure(port);
+            Firewall.Configure(port);
 
             // Start listening for broadcasts
-            UdpListener listener = new UdpListener(port, this);
+            _listener = new UdpListener(port, this);
 
             OnRepoll(this, null);
         }
 
         internal void OnRepoll(Object source, ElapsedEventArgs e)
         {
-            Logger.Info("Sending broadcast on port {0}", Config.Instance.GetPort());
+            Logger.Info("Sending BROADCAST on port {0}", Config.Instance.GetPort());
 
             // Discover new hosts
             UdpBroadcaster broadcaster = new UdpBroadcaster(Config.Instance.GetPort());
@@ -76,7 +76,7 @@ namespace AutoHostfileLib
                 }
             }
 
-            RepollTimer.Stop();
+            _repollTimer.Stop();
 
             if (networkUp)
             {
@@ -84,7 +84,7 @@ namespace AutoHostfileLib
                 OnRepoll(this, null);
 
                 // Restart the repoll timer
-                RepollTimer.Start();
+                _repollTimer.Start();
             }
         }
 
@@ -119,8 +119,15 @@ namespace AutoHostfileLib
             Logger.Debug("Recieved BROADCAST from {0}({1})", message.Address, message.Name);
 
             // Ping back to the broadcaster, so they know we're alive
-            var client = new UdpMessageClient(Config.Instance.GetPort());
-            client.Send(message.Address, Messages.BuildPingMessage().ToString());
+            try
+            {
+                var client = new UdpMessageClient(Config.Instance.GetPort());
+                client.Send(message.Address, Messages.BuildPingMessage().ToString());
+            }
+            catch(SocketException)
+            {
+                Logger.Warn("Address {0} is unroutable", message.Address);
+            }
         }
 
         private void OnPingRecieved(PingMessage message)
@@ -130,14 +137,14 @@ namespace AutoHostfileLib
             try
             {
                 // Send the pong message, we do this as an extra hand shake since sometimes we're told
-                // about a secondary address which only route in one direction
+                // about a secondary address which only routes in one direction
                 var client = new UdpMessageClient(Config.Instance.GetPort());
                 client.Send(message.Address, Messages.BuildPongMessage().ToString());
 
                 // Add the reply to our hosts file
-                HostFile.AddMapping(message.Name, message.Address);
+                _hostFile.AddMapping(message.Name, message.Address);
             }
-            catch(SocketException ex)
+            catch(SocketException)
             {
                 Logger.Warn("Address {0} is unroutable", message.Address);
             }
@@ -146,7 +153,7 @@ namespace AutoHostfileLib
         private void OnPongRecieved(PongMessage message)
         {
             Logger.Debug("Recieved PONG from {0}({1})", message.Address, message.Name);
-            HostFile.AddMapping(message.Name, message.Address);
+            _hostFile.AddMapping(message.Name, message.Address);
         }
     }
 }

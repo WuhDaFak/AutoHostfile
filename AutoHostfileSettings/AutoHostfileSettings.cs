@@ -26,13 +26,8 @@ namespace AutoHostfileSettings
 {
     public partial class AutoHostfileSettingsForm : Form
     {
-        private Regex rgxValidHost = new Regex(@"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$");
-
-        private static Random random = new Random();
-
-        private string originalFriendlyName = Config.Instance.GetFriendlyHostname();
-        private int originalPort = Config.Instance.GetPort();
-        private string originalSharedKey = Config.Instance.GetSharedKey();
+        private Regex _rgxValidHost = new Regex(@"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$");
+        private static Random _random = new Random();
 
         public AutoHostfileSettingsForm()
         {
@@ -43,7 +38,6 @@ namespace AutoHostfileSettings
         {
             var config = Config.Instance;
 
-            // TODO These require validated text fields
             config.SetFriendlyHostname(txtFriendlyName.Text);
             int port = int.Parse(txtPort.Text);
             config.SetPort(port);
@@ -106,7 +100,7 @@ namespace AutoHostfileSettings
 
         private bool txtFriendlyNameValid()
         {
-            return txtFriendlyName.Text.Length > 0 && rgxValidHost.IsMatch(txtFriendlyName.Text);
+            return txtFriendlyName.Text.Length > 0 && _rgxValidHost.IsMatch(txtFriendlyName.Text);
         }
 
         private void txtFriendlyName_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -149,7 +143,7 @@ namespace AutoHostfileSettings
         {
             const string chars = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!""£$%^&()";
             return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
+              .Select(s => s[_random.Next(s.Length)]).ToArray());
         }
 
     }

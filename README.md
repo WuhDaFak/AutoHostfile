@@ -12,7 +12,7 @@ It's useful:
 
 ## Latest Release
 
-https://github.com/benstaniford/AutoHostfile/raw/master/Releases/AutoHostfile-1.10.msi
+https://github.com/benstaniford/AutoHostfile/raw/master/Releases/AutoHostfile-1.11.msi
 
 ## Patch Notes
 

@@ -13,6 +13,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 
 namespace AutoHostfileLib
@@ -21,11 +22,20 @@ namespace AutoHostfileLib
     {
         public string HostName { get; private set; }
         public string Address { get; private set; }
+        public DateTime Timestamp { get; private set; }
+
+        public HostEntry(string hostname, string address, DateTime timeStamp)
+        {
+            HostName = hostname;
+            Address = address;
+            Timestamp = timeStamp;
+        }
 
         public HostEntry(string hostname, string address)
         {
             HostName = hostname;
             Address = address;
+            Timestamp = DateTime.Now;
         }
 
         public static bool operator ==(HostEntry lhs, HostEntry rhs) => (lhs.Address == rhs.Address && lhs.HostName == rhs.HostName);
@@ -33,6 +43,7 @@ namespace AutoHostfileLib
 
         public override bool Equals(object obj)
         {
+            // The time stamp is secondary information which doesn't affect equality
             return obj is HostEntry entry &&
                    HostName == entry.HostName &&
                    Address == entry.Address;

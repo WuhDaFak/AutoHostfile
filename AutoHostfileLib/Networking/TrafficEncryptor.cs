@@ -22,27 +22,27 @@ namespace AutoHostfileLib
 {
     internal sealed class TrafficEncryptor
     {
-        private static readonly Lazy<TrafficEncryptor> logger = new Lazy<TrafficEncryptor>(() => new TrafficEncryptor());
-        public static TrafficEncryptor Instance { get { return logger.Value; } }
+        private static readonly Lazy<TrafficEncryptor> _encryptor = new Lazy<TrafficEncryptor>(() => new TrafficEncryptor());
+        public static TrafficEncryptor Instance { get { return _encryptor.Value; } }
 
-        private string Password;
+        private string _password;
         private const int Rfc2898KeygenIterations = 100;
         private const int AesKeySizeInBits = 128;
-        private Aes AesAlg = new AesManaged();
-        private Rfc2898DeriveBytes Rfc2898;
+        private Aes _aesAlg = new AesManaged();
+        private Rfc2898DeriveBytes _rfc2898;
 
         // This isn't great, we should find a way to use a proper salt to improve encryption security
         private byte[] Salt = new byte[16]{0xa, 0xf, 0x3, 0x5, 0x1, 0xc, 0x4, 0x1, 0x9, 0x3, 0x7, 0xc, 0x1, 0xe, 0xf , 0x7};
 
         private TrafficEncryptor()
         {
-            Password = Config.Instance.GetSharedKey();
-            AesAlg.Padding = PaddingMode.PKCS7;
-            AesAlg.KeySize = AesKeySizeInBits;
-            int KeyStrengthInBytes = AesAlg.KeySize / 8;
-            Rfc2898 = new Rfc2898DeriveBytes(Password, Salt, Rfc2898KeygenIterations);
-            AesAlg.Key = Rfc2898.GetBytes(KeyStrengthInBytes);
-            AesAlg.IV = Rfc2898.GetBytes(KeyStrengthInBytes);
+            _password = Config.Instance.GetSharedKey();
+            _aesAlg.Padding = PaddingMode.PKCS7;
+            _aesAlg.KeySize = AesKeySizeInBits;
+            int keyStrengthInBytes = _aesAlg.KeySize / 8;
+            _rfc2898 = new Rfc2898DeriveBytes(_password, Salt, Rfc2898KeygenIterations);
+            _aesAlg.Key = _rfc2898.GetBytes(keyStrengthInBytes);
+            _aesAlg.IV = _rfc2898.GetBytes(keyStrengthInBytes);
         }
 
         internal string Decrypt(byte[] cipherText)
@@ -50,7 +50,7 @@ namespace AutoHostfileLib
             byte[] plainText = null;
             using (var memoryStream = new MemoryStream())
             {
-                using (var cryptoStream = new CryptoStream(memoryStream, AesAlg.CreateDecryptor(), CryptoStreamMode.Write))
+                using (var cryptoStream = new CryptoStream(memoryStream, _aesAlg.CreateDecryptor(), CryptoStreamMode.Write))
                 {
                     cryptoStream.Write(cipherText, 0, cipherText.Length);
                 }
@@ -67,7 +67,7 @@ namespace AutoHostfileLib
 
             using (var memoryStream = new MemoryStream())
             {
-                using (var cryptoStream = new CryptoStream(memoryStream, AesAlg.CreateEncryptor(), CryptoStreamMode.Write))
+                using (var cryptoStream = new CryptoStream(memoryStream, _aesAlg.CreateEncryptor(), CryptoStreamMode.Write))
                 {
                     cryptoStream.Write(rawPlaintext, 0, rawPlaintext.Length);
                 }

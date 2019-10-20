@@ -13,23 +13,20 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AutoHostfileLib
 {
     internal class HostFileDebounceWriter
     {
         public Dictionary<string, HostEntry> HostnameToAddress = new Dictionary<string, HostEntry>();
-        private Debouncer debouncer = new Debouncer(3000);
+
+        private Debouncer _debouncer = new Debouncer(3000);
 
         internal HostFileDebounceWriter()
         {
-            debouncer.DebounceFiredEvent += WriteFile;
+            _debouncer.DebounceFiredEvent += WriteFile;
         }
 
         internal void AddMapping(string hostname, string address)
@@ -51,7 +48,7 @@ namespace AutoHostfileLib
                 HostnameToAddress[hostname] = new HostEntry(hostname, address);
 
                 // Write the hosts file once events have gone quiet
-                debouncer.Trigger();
+                _debouncer.Trigger();
             }
         }
 

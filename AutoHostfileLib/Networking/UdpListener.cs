@@ -17,20 +17,19 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AutoHostfileLib
 {
     internal class UdpListener
     {
-        private int Port;
-        private EventHandler Handler;
+        private int _port;
+        private EventHandler _handler;
 
         internal UdpListener(int port, EventHandler eventHandler)
         {
-            Port = port;
-            Handler = eventHandler;
+            _port = port;
+            _handler = eventHandler;
             StartListening();
         }
 
@@ -39,16 +38,16 @@ namespace AutoHostfileLib
             var from = new IPEndPoint(0, 0);
             Task.Run(() =>
             {
-                Logger.Info("Listening on port {0}", Port);
+                Logger.Info("Listening on port {0}", _port);
                 using (var client = new UdpClient())
                 {
-                    client.Client.Bind(new IPEndPoint(IPAddress.Any, Port));
+                    client.Client.Bind(new IPEndPoint(IPAddress.Any, _port));
                     while (true)
                     {
                         try
                         {
                             var recvBuffer = TrafficEncryptor.Instance.Decrypt(client.Receive(ref from));
-                            Handler.OnMessageRecieved(recvBuffer);
+                            _handler.OnMessageRecieved(recvBuffer);
                         }
                         catch(CryptographicException)
                         {

@@ -28,12 +28,12 @@ namespace AutoHostfileLib
         /// </summary>
         public event NetworkSinkEventHandler NetworkSinkDebounceEvent;
 
-        private const int DebouncePeriod = 3000;
-        private Debouncer NetworkChangeDebouncer = new Debouncer(DebouncePeriod);
+        private const int _debouncePeriod = 3000;
+        private Debouncer _networkChangeDebouncer = new Debouncer(_debouncePeriod);
 
         public NetworkEventSink()
         {
-            NetworkChangeDebouncer.DebounceFiredEvent += DebounceFired;
+            _networkChangeDebouncer.DebounceFiredEvent += DebounceFired;
 
             // Register for network changed events
             NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(OnNetworkAvailabilityChanged);
@@ -50,17 +50,17 @@ namespace AutoHostfileLib
         private void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
             Logger.Debug("Power event triggered");
-            NetworkChangeDebouncer.Trigger();
+            _networkChangeDebouncer.Trigger();
         }
 
         private void OnNetworkAddressChanged(object sender, EventArgs e)
         {
-            NetworkChangeDebouncer.Trigger();
+            _networkChangeDebouncer.Trigger();
         }
 
         private void OnNetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {
-            NetworkChangeDebouncer.Trigger();
+            _networkChangeDebouncer.Trigger();
         }
     }
 }

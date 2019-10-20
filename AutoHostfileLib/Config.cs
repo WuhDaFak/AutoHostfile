@@ -22,9 +22,9 @@ namespace AutoHostfileLib
     public sealed class Config
     {
         // Config is a singleton
-        private static readonly Lazy<Config> config = new Lazy<Config>(() => new Config());
+        private static readonly Lazy<Config> _config = new Lazy<Config>(() => new Config());
 
-        public static Config Instance { get { return config.Value; } }
+        public static Config Instance { get { return _config.Value; } }
 
         internal const string ServiceName = "AutoHostfileService";
 

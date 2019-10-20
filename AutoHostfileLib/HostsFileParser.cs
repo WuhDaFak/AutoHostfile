@@ -22,17 +22,17 @@ namespace AutoHostfileLib
 {
     public class HostsFileParser
     {
-        private Dictionary<string, HostEntry> HostnameToAddress;
-        private const string CommentToken = "HostFileRewriter";
-        private const string CommentFormat = " # " + CommentToken;
-        private string HostsFilePath;
+        private Dictionary<string, HostEntry> _hostnameToAddress;
+        private const string _commentToken = "HostFileRewriter";
+        private const string _commentFormat = " # " + _commentToken;
+        private string _hostsFilePath;
 
         /// <summary>
         /// Used by the command line tool
         /// </summary>
         public HostsFileParser()
         {
-            HostsFilePath = Environment.GetFolderPath(Environment.SpecialFolder.System) + @"\drivers\etc\hosts";
+            _hostsFilePath = Environment.GetFolderPath(Environment.SpecialFolder.System) + @"\drivers\etc\hosts";
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace AutoHostfileLib
         /// <param name="hostnameToAddress"></param>
         internal HostsFileParser(Dictionary<string, HostEntry> hostnameToAddress) : this()
         {
-            HostnameToAddress = hostnameToAddress;
+            _hostnameToAddress = hostnameToAddress;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace AutoHostfileLib
         public void Parse(List<HostEntry> oldEntries, List<string> originalLines)
         {
             var blankLines = new List<string>();
-            using (var reader = new StreamReader(HostsFilePath))
+            using (var reader = new StreamReader(_hostsFilePath))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -62,7 +62,7 @@ namespace AutoHostfileLib
                         // Blank line
                         blankLines.Add(line);
                     }
-                    else if (Regex.Match(line, @"^\s*\#.*$", RegexOptions.None).Success || line.IndexOf(CommentToken) == -1)
+                    else if (Regex.Match(line, @"^\s*\#.*$", RegexOptions.None).Success || line.IndexOf(_commentToken) == -1)
                     {
                         // Keep any blank lines that the user added
                         originalLines.AddRange(blankLines);
@@ -84,16 +84,16 @@ namespace AutoHostfileLib
         internal void Rewrite()
         {
             var oldEntries = ScrubFile();
-            if (HostnameToAddress.Count > 0 || oldEntries.Count > 0)
+            if (_hostnameToAddress.Count > 0 || oldEntries.Count > 0)
             {
-                Logger.Info("Rewriting {0}", HostsFilePath);
+                Logger.Info("Rewriting {0}", _hostsFilePath);
 
                 // We always want our own friendly name to be self pingable
                 var ourName = Config.Instance.GetFriendlyHostname();
-                HostnameToAddress[ourName] = new HostEntry(ourName, "127.0.0.1");
+                _hostnameToAddress[ourName] = new HostEntry(ourName, "127.0.0.1");
 
                 var addresses = new HashSet<string>();
-                foreach(var value in HostnameToAddress.Values)
+                foreach(var value in _hostnameToAddress.Values)
                 {
                     addresses.Add(value.Address);
                 }
@@ -101,22 +101,22 @@ namespace AutoHostfileLib
                 foreach(var oldEntry in oldEntries)
                 {
                     // Add back any old host entries which don't conflict with the latest information we got from broadcasts
-                    if(!HostnameToAddress.ContainsKey(oldEntry.HostName) && !addresses.Contains(oldEntry.Address))
+                    if(!_hostnameToAddress.ContainsKey(oldEntry.HostName) && !addresses.Contains(oldEntry.Address))
                     {
-                        HostnameToAddress.Add(oldEntry.HostName, oldEntry);
+                        _hostnameToAddress.Add(oldEntry.HostName, oldEntry);
                     }
                 }
 
                 try
                 {
-                    using (var writer = new StreamWriter(HostsFilePath, true))
+                    using (var writer = new StreamWriter(_hostsFilePath, true))
                     {
                         writer.WriteLine();
                         writer.WriteLine();
 
-                        foreach (var originalLine in HostnameToAddress.Values)
+                        foreach (var originalLine in _hostnameToAddress.Values)
                         {
-                            writer.WriteLine("{0} {1} {2,25} {3}", originalLine.Address, originalLine.HostName, CommentFormat, DateTime.Now);
+                            writer.WriteLine("{0} {1} {2,25} {3}", originalLine.Address, originalLine.HostName, _commentFormat, DateTime.Now);
                         }
                     }
                 }
@@ -141,7 +141,7 @@ namespace AutoHostfileLib
 
             try
             {
-                Logger.Debug("Reading {0}", HostsFilePath);
+                Logger.Debug("Reading {0}", _hostsFilePath);
 
                 // Parse the file
                 var originalLines = new List<string>();
@@ -150,7 +150,7 @@ namespace AutoHostfileLib
                 if (oldEntries.Count > 0)
                 {
                     // Rewrite the file without our entries
-                    using (var writer = new StreamWriter(HostsFilePath, false))
+                    using (var writer = new StreamWriter(_hostsFilePath, false))
                     {
                         foreach (var originalLine in originalLines)
                         {

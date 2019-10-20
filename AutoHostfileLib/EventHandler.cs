@@ -119,8 +119,15 @@ namespace AutoHostfileLib
             Logger.Debug("Recieved BROADCAST from {0}({1})", message.Address, message.Name);
 
             // Ping back to the broadcaster, so they know we're alive
-            var client = new UdpMessageClient(Config.Instance.GetPort());
-            client.Send(message.Address, Messages.BuildPingMessage().ToString());
+            try
+            {
+                var client = new UdpMessageClient(Config.Instance.GetPort());
+                client.Send(message.Address, Messages.BuildPingMessage().ToString());
+            }
+            catch(SocketException)
+            {
+                Logger.Warn("Address {0} is unroutable", message.Address);
+            }
         }
 
         private void OnPingRecieved(PingMessage message)

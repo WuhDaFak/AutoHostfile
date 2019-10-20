@@ -137,7 +137,7 @@ namespace AutoHostfileLib
                 // Add the reply to our hosts file
                 _hostFile.AddMapping(message.Name, message.Address);
             }
-            catch(SocketException ex)
+            catch(SocketException)
             {
                 Logger.Warn("Address {0} is unroutable", message.Address);
             }

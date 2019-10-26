@@ -16,7 +16,7 @@ https://github.com/benstaniford/AutoHostfile/raw/master/Releases/AutoHostfile-1.
 
 ## Patch Notes
 
-https://github.com/benstaniford/AutoHostfile/raw/master/PATCH_NOTES.md
+https://github.com/benstaniford/AutoHostfile/blob/master/PATCH_NOTES.md
 
 ## Installation Instructions
 
